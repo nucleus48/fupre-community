@@ -3,14 +3,6 @@ import { Timestamp } from "firebase/firestore"
 export type User = {
   uid: string
   username: string
-  email: string
-  photoURL: string
-  verified: boolean
-}
-
-export type AppUser = {
-  uid: string
-  username: string
   photoURL: string
   createdAt: Timestamp
 }

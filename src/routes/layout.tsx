@@ -1,4 +1,6 @@
-import { ClerkProvider } from "@clerk/clerk-react";
+import LoadingIndicator from "@/components/LoadingIndicator";
+import Protected from "@/components/Protected";
+import { ClerkLoaded, ClerkLoading, ClerkProvider } from "@clerk/clerk-react";
 import { Outlet, useNavigate } from "react-router-dom";
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
@@ -23,7 +25,14 @@ export default function RootLayout() {
         }
       }}
     >
-      <Outlet />
+      <ClerkLoading>
+        <LoadingIndicator />
+      </ClerkLoading>
+      <ClerkLoaded>
+        <Protected>
+          <Outlet />
+        </Protected>
+      </ClerkLoaded>
     </ClerkProvider>
   )
 }

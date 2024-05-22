@@ -1,27 +1,28 @@
-import { Suspense, lazy } from "react"
 import { Route, RouterProvider, createBrowserRouter, createRoutesFromElements } from "react-router-dom"
 import GlobalErrorBoundary from "./routes/global-error"
-import LoadingIndicator from "./components/LoadingIndicator"
 import { SignIn, SignUp } from "@clerk/clerk-react"
 import AuthLayout from "./routes/auth/layout"
+import RootLayout from "./routes/layout"
+import HomePage from "@/routes/page"
+import AppLayout from "@/routes/app/layout"
+import AppPage from "./routes/app/page"
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route ErrorBoundary={GlobalErrorBoundary} Component={lazy(() => import("./routes/layout"))}>
-      <Route path="/" Component={lazy(() => import("@/routes/page"))} />
-      <Route Component={AuthLayout}>
-        <Route path="/signup" Component={SignUp} />
-        <Route path="/signin" Component={SignIn} />
+    <Route errorElement={<GlobalErrorBoundary />} element={<RootLayout />}>
+      <Route path="/" element={<HomePage />} />
+      <Route element={<AuthLayout />}>
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/signin" element={<SignIn />} />
+      </Route>
+      <Route path="/app" element={<AppLayout />}>
+        <Route index element={<AppPage />} />
       </Route>
     </Route>
   )
 )
 
 export default function App() {
-  return (
-    <Suspense fallback={<LoadingIndicator />}>
-      <RouterProvider router={router} fallbackElement={<LoadingIndicator />} />
-    </Suspense>
-  )
+  return <RouterProvider router={router} />
 }
 
