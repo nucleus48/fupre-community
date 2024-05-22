@@ -7,7 +7,7 @@ export default function HomePage() {
         <div className="container flex items-center gap-2 py-4">
           <img src="/logo.jpeg" alt="fupre logo" className="logo" />
           <div className="font-semibold text-lg mr-auto">Fupre Community</div>
-          <Link to="/login" className="btn">Log in</Link>
+          <Link to="/signin" className="btn">Sign in</Link>
         </div>
       </header>
 
