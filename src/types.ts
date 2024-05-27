@@ -2,104 +2,61 @@ import { Timestamp } from "firebase/firestore"
 
 export type User = {
   uid: string
+  firstname: string
+  lastname: string
+  email: string
   username: string
   photoURL: string
   createdAt: Timestamp
 }
 
-export type CommunityRequest = {
-  private: true
-  request: string[]
-} | Record<"private", false>
-
 export type Community = {
+  id: string
   name: string
   description: string
   photoURL: string
   createdAt: Timestamp
   members: string[]
   admins: string[]
-} & CommunityRequest
-
-export type ChannelRequest = {
-  private: true
-  request: string[]
-} | Record<"private", false>
+}
 
 export type Channel = {
+  id: string
   name: string
   description: string
   photoURL: string
   sendMessages: boolean
-  disappearingMessages?: number
   createdAt: Timestamp
+  privateChannel: boolean
+  requests: string[]
   members: string[]
   admins: string[]
-} & ChannelRequest
+  pinnedMessages: string[]
+}
 
-export type MessageText = {
+export enum DefaultChannel {
+  Announcement = "Announcement",
+  QAForum = "Q&A Forum",
+  Chatbox = "Chatbox"
+}
+
+export type MessageBase<T extends { type: string }> = {
+  id: string
+  senderId: string
+  createdAt: Timestamp
+  forwarded?: string
+  reactions: Reaction[]
+} & T
+
+export type MessageText = MessageBase<{
   type: "text"
   content: string
-}
+}>
 
-export type MessageImage = {
-  type: "image"
-  imageURL: string
-  content: string
-}
-
-export type MessageVideo = {
-  type: "video"
-  videoURL: string
-  content: string
-}
-
-export type MessageAudio = {
-  type: "audio"
-  audioURL: string
-}
-
-export type MessageDocument = {
-  type: "document"
-  documentURL: string
-  content: string
-}
-
-export type MessageYoutube = {
-  type: "youtube"
-  videoURL: string
-  content: string
-}
-
-export type MessageOpenGraph = {
-  type: "openGraph",
-  imageURL: string
-  name: string
-  description: string
-  url: string
-  content: string
-}
-
-export type Message = {
-  senderID: string
-  replyTo: string
-  forwarded: boolean
-  pinned: boolean
-  createdAt: Timestamp
-  unreadBy: string[]
-  reactions: Reaction[]
-} & (
-    | MessageText
-    | MessageImage
-    | MessageAudio
-    | MessageVideo
-    | MessageYoutube
-    | MessageOpenGraph
-    | MessageDocument
-  )
+export type Message = MessageText
 
 export type Reaction = {
-  uid: string
-  type: string
-  createdAt: Timestamp
+  id: string
+  senderId: string
+  emoji: ""
 }

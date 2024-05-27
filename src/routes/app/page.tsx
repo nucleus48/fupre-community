@@ -1,19 +1,36 @@
-import { MaterialSymbolsAdd, MaterialSymbolsSearch, MingcuteAnnouncementLine } from "@/components/Icons";
-import { UserButton } from "@clerk/clerk-react";
+import LoadingIndicator from "@/components/LoadingIndicator";
+import SyncUserData from "@/components/SyncUserData";
+import { auth } from "@/lib/firebase";
+import ChannelsProvider from "@/providers/ChannelsProvider";
+import CommunitiesProvider from "@/providers/CommunitiesProvider";
+import MessageStatsProvider from "@/providers/MessageStatsProvider";
+import { useAuth } from "@clerk/clerk-react";
+import { signInWithCustomToken } from "firebase/auth";
+import { useEffect, useState } from "react";
 
 export default function AppPage() {
+  const { getToken } = useAuth()
+  const [authSynced, setAuthSynced] = useState(false)
+
+  useEffect(() => {
+    getToken({ template: "integration_firebase" })
+      .then(token => signInWithCustomToken(auth, token!))
+      .then(() => setAuthSynced(true))
+  }, [])
+
+  if (!authSynced) return <LoadingIndicator />
+
   return (
-    <>
-      <header className="shadow">
-        <div className="container flex items-center gap-2 py-4">
-          <img src="/logo.jpeg" alt="fupre logo" className="h-6" />
-          <div className="mr-auto font-semibold">Fupre Community</div>
-          <MaterialSymbolsAdd className="text-xl text-gray-600" />
-          <MaterialSymbolsSearch className="text-xl text-gray-600" />
-          <MingcuteAnnouncementLine className="text-xl text-gray-600" />
-          <UserButton />
-        </div>
-      </header>
-    </>
+    <CommunitiesProvider>
+      <ChannelsProvider>
+        <MessageStatsProvider>
+          <SyncUserData />
+          <main>
+            <div>
+            </div>
+          </main>
+        </MessageStatsProvider>
+      </ChannelsProvider>
+    </CommunitiesProvider>
   )
 }
