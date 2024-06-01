@@ -4,6 +4,7 @@ import { PropsWithChildren, createContext, useContext, useEffect, useState } fro
 import { useCommunities } from "./CommunitiesProvider";
 import { onSnapshot } from "firebase/firestore";
 import { firebaseRefs } from "@/lib/firebase";
+import arrayConcate from "@/lib/utils/arrayConcate";
 
 export type Channels = (Channel & { communityId: string })[]
 
@@ -26,7 +27,7 @@ export default function ChannelsProvider({ children }: PropsWithChildren) {
       const channels = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id, communityId }))
       setChannels(prev => {
         if (!prev) return channels
-        return [...prev, ...channels]
+        return arrayConcate(channels, prev, "id")
       })
     }))
     return () => unsubscribers.forEach(unsubscribe => unsubscribe())

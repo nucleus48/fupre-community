@@ -1,4 +1,4 @@
-import { Timestamp, addDoc, arrayUnion, doc, getDocs, query, updateDoc, where } from "firebase/firestore";
+import { Timestamp, addDoc, arrayUnion, doc, getDoc, getDocs, query, updateDoc, where } from "firebase/firestore";
 import { firebaseRefs, storage } from "./firebase";
 import { getDownloadURL, ref } from "firebase/storage";
 import { uploadBytes } from "firebase/storage";
@@ -96,7 +96,15 @@ export async function createCommunity(
 
 export async function joinChannel(uid: string, communityId: string, channelId: string) {
   const channelRef = doc(firebaseRefs.channels(communityId), channelId)
-  await updateDoc(channelRef, { members: arrayUnion(uid) })
+  const channel = await getDoc(channelRef)
+
+  if (channel.data()?.privateChannel) {
+    await updateDoc(channelRef, { requests: arrayUnion(uid) })
+  }
+
+  else {
+    await updateDoc(channelRef, { members: arrayUnion(uid) })
+  }
 }
 
 export async function joinCommunity(uid: string, communityId: string) {

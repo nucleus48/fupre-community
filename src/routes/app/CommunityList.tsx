@@ -22,7 +22,7 @@ export default function CommunityList(props: {
   return (
     <>
       <CommunityHeader setSearchQuery={setSearchQuery} />
-      <main>
+      <div>
         {!!searchCommunities.length && (
           <section className="container space-y-4 pt-4">
             {searchCommunities.map(community =>
@@ -38,7 +38,7 @@ export default function CommunityList(props: {
             )}
           </section>
         )}
-      </main>
+      </div>
     </>
   )
 }
