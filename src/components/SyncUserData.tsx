@@ -1,6 +1,6 @@
-import { db } from "@/lib/firebase";
+import { firebaseRefs } from "@/lib/firebase";
 import { useUser } from "@clerk/clerk-react";
-import { Timestamp, doc, updateDoc } from "firebase/firestore";
+import { Timestamp, doc, setDoc } from "firebase/firestore";
 import { useEffect } from "react";
 
 export default function SyncUserData() {
@@ -8,13 +8,15 @@ export default function SyncUserData() {
 
   useEffect(() => {
     if (user) {
-      const userRef = doc(db, "users", user.id)
-      updateDoc(userRef, {
+      setDoc(doc(firebaseRefs.users, user.id), {
         uid: user.id,
-        username: user.username,
+        username: user.username || "",
         photoURL: user.imageUrl,
-        createdAt: Timestamp.fromDate(user.createdAt!)
-      })
+        createdAt: Timestamp.fromDate(user.createdAt!),
+        email: user.primaryEmailAddress?.emailAddress,
+        firstname: user.firstName,
+        lastname: user.lastName
+      }, { merge: true })
     }
   }, [user])
 

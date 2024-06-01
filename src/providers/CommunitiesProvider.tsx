@@ -1,5 +1,6 @@
 import LoadingIndicator from "@/components/LoadingIndicator";
 import { firebaseRefs } from "@/lib/firebase";
+import mergeSort from "@/lib/utils/mergeSort";
 import { Community } from "@/types";
 import { useAuth } from "@clerk/clerk-react";
 import { onSnapshot } from "firebase/firestore";
@@ -28,7 +29,7 @@ export default function CommunitiesProvider({ children }: PropsWithChildren) {
       }
       return [prev[0], [...prev[1], curr]] as Communities
     }, [[], []] as Communities)
-    setCommunities(communities)
+    setCommunities([communities[0], mergeSort(communities[1])])
   }), [])
 
 

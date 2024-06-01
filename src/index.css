@@ -16,4 +16,8 @@
     background-image: linear-gradient(hsl(0 0% 0% / 50%), hsl(0 0% 0% / 50%)),
       url(/background.jpg);
   }
+
+  .input {
+    @apply p-2 rounded-lg block border outline-blue-600 w-full text-sm;
+  }
 }
