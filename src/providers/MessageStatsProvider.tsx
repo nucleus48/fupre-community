@@ -5,11 +5,12 @@ import LoadingIndicator from "@/components/LoadingIndicator";
 import { limitToLast, onSnapshot, orderBy, query, where } from "firebase/firestore";
 import { firebaseRefs } from "@/lib/firebase";
 import { useAuth } from "@clerk/clerk-react";
+import arrayConcate from "@/lib/utils/arrayConcate";
 
 export type MessageStat = {
   channelId: string
   communityId: string
-  unreadCount?: number
+  unreadCount?: string[]
   lastMessage?: Message
 }
 
@@ -22,8 +23,8 @@ export default function MessageStatsProvider({ children }: PropsWithChildren) {
   const setMessageStat = useCallback((messageStat: MessageStat) => setMessageStats(prev => {
     if (!prev) return [messageStat]
     const prevMessageStat = prev.find(value => value.communityId == messageStat.communityId && value.channelId == messageStat.channelId)
-    if (prevMessageStat) return [...prev, { ...prevMessageStat, ...messageStat }]
-    return [...prev, messageStat]
+    if (prevMessageStat) return arrayConcate([{ ...prevMessageStat, ...messageStat }], prev, "channelId")
+    return arrayConcate([messageStat], prev, "channelId")
   }), [])
 
   useEffect(() => {
@@ -31,7 +32,7 @@ export default function MessageStatsProvider({ children }: PropsWithChildren) {
     const unsubscribers = channels.map(({ communityId, id: channelId }) => {
       const unreadCountQuery = query(firebaseRefs.messages(communityId, channelId), where("unreadBy", "array-contains", userId))
       const lastMessageQuery = query(firebaseRefs.messages(communityId, channelId), orderBy("createdAt"), limitToLast(1))
-      const unsubscribe1 = onSnapshot(unreadCountQuery, snapshot => setMessageStat({ communityId, channelId, unreadCount: snapshot.size }))
+      const unsubscribe1 = onSnapshot(unreadCountQuery, snapshot => setMessageStat({ communityId, channelId, unreadCount: snapshot.docs.map(doc => doc.id) }))
       const unsubscribe2 = onSnapshot(lastMessageQuery, snapshot => setMessageStat({ communityId, channelId, lastMessage: snapshot.docs[0]?.data() }))
       return () => (unsubscribe1(), unsubscribe2())
     })

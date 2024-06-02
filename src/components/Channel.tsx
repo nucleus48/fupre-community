@@ -18,7 +18,7 @@ export default function Channel(props: PropsWithChildren<ChannelType & MessageSt
           <div className="line-clamp-1">{props.lastMessage
             ? props.lastMessage.content
             : `${props.members.length} member${props.members.length > 1 ? "s" : ""}`}</div>
-          {!!props.unreadCount && props.unreadCount < 100 && <div className="bg-blue-600 text-white text-xs size-5 grid place-items-center rounded-full">{props.unreadCount}</div>}
+          {!!props.unreadCount?.length && <div className="bg-blue-600 text-white text-xs size-5 grid place-items-center rounded-full">{props.unreadCount.length < 100 && props.unreadCount.length}</div>}
         </div>
       </div>
     </div>

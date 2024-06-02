@@ -1,4 +1,4 @@
-import { Timestamp, addDoc, arrayUnion, doc, getDoc, getDocs, query, updateDoc, where } from "firebase/firestore";
+import { Timestamp, addDoc, arrayRemove, arrayUnion, doc, getDoc, getDocs, query, updateDoc, where } from "firebase/firestore";
 import { firebaseRefs, storage } from "./firebase";
 import { getDownloadURL, ref } from "firebase/storage";
 import { uploadBytes } from "firebase/storage";
@@ -122,4 +122,21 @@ export async function joinCommunity(uid: string, communityId: string) {
     ...channels.docs.map(doc =>
       joinChannel(uid, communityId, doc.id))
   ])
+}
+
+export async function sendTextMessage(senderId: string, communityId: string, channelId: string, content: string, members: string[]) {
+  await addDoc(firebaseRefs.messages(communityId, channelId), {
+    id: "",
+    senderId,
+    content,
+    type: "text",
+    createdAt: Timestamp.now(),
+    reactions: [],
+    unreadBy: members.filter(member => member != senderId)
+  })
+}
+
+export async function markMessageAsRead(userId: string, communityId: string, channelId: string, messageId: string) {
+  const messageRef = doc(firebaseRefs.messages(communityId, channelId), messageId)
+  await updateDoc(messageRef, { unreadBy: arrayRemove(userId) })
 }

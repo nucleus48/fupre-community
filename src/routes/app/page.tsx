@@ -31,14 +31,14 @@ export default function AppPage() {
       <ChannelsProvider>
         <MessageStatsProvider>
           <SyncUserData />
-          <main className="bg-[url(/chat-background.jpeg)] bg-cover bg-center grid grid-cols-1 sm:grid-cols-2">
+          <main className="h-svh bg-cover bg-center grid grid-cols-1 sm:grid-cols-2">
             <div className={`bg-white relative row-start-1 col-start-1 ${activePage == "communities" && "z-10"}`}>
               <CommunityList openCommunity={() => setActivePage("channels")} />
             </div>
             <div className={`bg-white relative row-start-1 col-start-1 ${activePage == "channels" && "z-10"}`}>
               <ChannelList openMessaging={() => setActivePage("messaging")} back={() => setActivePage("communities")} />
             </div>
-            <div className={`bg-[url(/chat-background.jpeg)] relative row-start-1 col-start-1 sm:col-start-2 ${activePage == "messaging" && "z-10"}`}>
+            <div className={`max-h-svh bg-white relative row-start-1 col-start-1 sm:col-start-2 ${activePage == "messaging" && "z-10"} grid grid-cols-1 grid-rows-[auto_1fr_auto]`}>
               <Messaging back={() => setActivePage("channels")} />
             </div>
           </main>

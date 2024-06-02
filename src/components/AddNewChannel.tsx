@@ -36,7 +36,7 @@ export default function AddNewChannel() {
 
   return (
     <>
-      <div className="bg-white fixed bottom-0 inset-x-0 p-4">
+      <div className="bg-white absolute z-[5] bottom-0 inset-x-0 p-4">
         <div className="flex items-center justify-center gap-2 btn w-full rounded-full" onClick={() => setOpenAdd(true)}>
           <MaterialSymbolsAdd className="text-xl" />
           <span>Add new channel</span>

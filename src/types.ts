@@ -46,6 +46,8 @@ export type MessageBase<T extends { type: string }> = {
   createdAt: Timestamp
   forwarded?: string
   reactions: Reaction[]
+  unreadBy: string[]
+  group?: boolean
 } & T
 
 export type MessageText = MessageBase<{
